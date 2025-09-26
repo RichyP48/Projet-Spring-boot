@@ -1,0 +1,67 @@
+/* styles.css - modern minimal styling */
+
+:root{
+    --brand: #3b82f6; /* blue-500 */
+    --muted: #6b7280;
+    --card-radius: 12px;
+    --shadow-soft: 0 6px 18px rgba(15,23,42,0.06);
+}
+
+body{
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    color: #0f172a;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* navbar gradient */
+.navbar.bg-gradient{
+    background: linear-gradient(90deg, rgba(59,130,246,1) 0%, rgba(88,28,135,1) 100%);
+}
+.navbar .brand-logo{
+    font-size: 1.25rem;
+}
+.brand-title{
+    font-weight:600;
+    color: #fff;
+}
+
+/* cards */
+.card{
+    border-radius: var(--card-radius);
+    box-shadow: var(--shadow-soft);
+}
+
+/* badges custom */
+.badge {
+    font-weight:600;
+}
+
+/* form inputs */
+.form-control, .form-select {
+    border-radius: 10px;
+    box-shadow: none;
+    border: 1px solid rgba(15,23,42,0.06);
+}
+
+/* primary button */
+.btn-primary{
+    background: linear-gradient(90deg, var(--brand), #7c3aed);
+    border: none;
+    box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+}
+
+/* floating behavior on small screens */
+@media (max-width: 576px){
+    .navbar .brand-title { font-size: 1rem; }
+    .btn.btn-primary { padding: 0.45rem 0.7rem; }
+}
+
+/* empty state */
+.text-muted .bi-inbox {
+    opacity: 0.18;
+    font-size: 3rem;
+}
+
+/* small helpers */
+.small-muted { color: var(--muted); }

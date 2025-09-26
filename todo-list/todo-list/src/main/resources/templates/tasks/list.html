@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head('Liste des tâches')"></head>
+<body>
+<div th:replace="fragments/header :: navbar"></div>
+
+<section class="mx-20 my-10">
+  <div class="flex flex-col sm:flex-row justify-between items-center  mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">Mes tâches</h1>
+      <p class="text-gray-500 text-sm">Organise ta journée avec style ✨</p>
+    </div>
+    <div class="mt-4 sm:mt-0 flex space-x-2">
+      <a href="/tasks/new"
+         class="px-4 py-2 bg-brand text-white rounded-lg shadow hover:bg-brand-dark transition">
+        + Nouvelle tâche
+      </a>
+      <a href="/swagger-ui/index.html" target="_blank"
+         class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+        📖 API Docs
+      </a>
+    </div>
+  </div>
+
+  <!-- filtre -->
+  <form method="get" action="/tasks" class="mb-6 flex space-x-2">
+    <select name="status" class="px-3 py-2 border rounded-lg">
+      <option value="">Tous les statuts</option>
+      <option th:each="s : ${statuses}" th:value="${s}" th:text="${s}"></option>
+    </select>
+    <button type="submit" class="px-4 py-2 bg-brand text-white rounded-lg">Filtrer</button>
+  </form>
+
+  <!-- grille des tâches -->
+  <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div th:each="task : ${tasks}" class="bg-white shadow rounded-lg p-5 flex flex-col justify-between">
+      <div>
+        <div class="flex justify-between items-center">
+          <h2 class="font-semibold text-lg text-gray-800" th:text="${task.title}">Titre tâche</h2>
+          <span th:switch="${task.status}" class="text-xs font-medium px-2 py-1 rounded">
+              <span th:case="'A_FAIRE'" class="bg-blue-100 text-blue-700">À faire</span>
+              <span th:case="'EN_COURS'" class="bg-yellow-100 text-yellow-700">En cours</span>
+              <span th:case="'TERMINE'" class="bg-green-100 text-green-700">Terminé</span>
+              <span th:case="*" class="bg-gray-100 text-gray-700">Autre</span>
+            </span>
+        </div>
+        <p class="text-gray-600 text-sm mt-2" th:text="${task.description}">Description...</p>
+      </div>
+
+      <div class="flex justify-between items-center mt-4">
+          <span class="text-xs text-gray-400"
+                th:text="${#temporals.format(task.createdAt, 'dd/MM/yyyy HH:mm')}">date</span>
+        <div class="flex space-x-2">
+          <a th:href="@{|/tasks/${task.id}/edit|}" class="text-brand hover:underline">✏️</a>
+          <form th:action="@{|/tasks/${task.id}/delete|}" method="post"
+                onsubmit="return confirm('Supprimer cette tâche ?')">
+            <button type="submit" class="text-red-500 hover:underline">🗑️</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- état vide -->
+  <div th:if="${tasks.size()} == 0" class="text-center text-gray-400 mt-10">
+    <p class="text-4xl">📭</p>
+    <p>Aucune tâche pour l’instant</p>
+  </div>
+</section>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>
