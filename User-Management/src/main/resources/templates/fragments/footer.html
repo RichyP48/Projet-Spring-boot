@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<footer class="mt-12 py-8 border-t border-gray-200 bg-white/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-sm text-gray-600 flex justify-between">
+        <div>© <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> MonApp</div>
+        <div class="flex gap-4">
+            <a href="#" class="hover:text-primary">Aide</a>
+            <a href="#" class="hover:text-primary">Confidentialité</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

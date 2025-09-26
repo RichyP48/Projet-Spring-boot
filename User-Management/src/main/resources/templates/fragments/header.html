@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header id="header" class="backdrop-blur-sm bg-white/60 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+
+            <div class="flex items-center gap-4">
+                <div class="p-2 bg-gradient-to-br from-primary to-accent rounded-2xl shadow-soft-lg">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L2 7v7c0 5 4 9 10 9s10-4 10-9V7L12 2z" fill="white"/></svg>
+                </div>
+                <div>
+                    <a href="/" class="text-lg font-semibold tracking-tight">MonApp</a>
+                    <div class="text-xs text-gray-500">Interface ultra-moderne</div>
+                </div>
+            </div>
+
+
+            <nav class="hidden md:flex items-center gap-6">
+                <a href="#" class="text-sm font-medium hover:text-primary">Dashboard</a>
+                <a href="#" class="text-sm font-medium hover:text-primary">Utilisateurs</a>
+                <a href="#" class="text-sm font-medium hover:text-primary">Paramètres</a>
+            </nav>
+
+
+            <div class="flex items-center gap-4">
+                <button class="px-3 py-2 rounded-lg bg-white border hover:shadow">Créer</button>
+                <div class="flex items-center gap-3">
+                    <img src="https://ui-avatars.com/api/?name=AD&background=7C3AED&color=fff" alt="avatar" class="w-9 h-9 rounded-full" />
+                    <div class="hidden sm:block text-sm">
+                        <div th:text="${userName}">Utilisateur</div>
+                        <div class="text-xs text-gray-500">Administrateur</div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</header>
+</body>
+</html>

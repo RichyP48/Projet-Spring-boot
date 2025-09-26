@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: *">
+<body>
+<div class="w-full max-w-6xl mx-auto">
+    <!-- HEADER -->
+    <header class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-extrabold">Tableau de bord</h1>
+        <div class="flex gap-3">
+            <button onclick="openUserModal()" class="px-4 py-2 bg-primary text-white rounded-lg">+ Utilisateur</button>
+            <button onclick="logout()" class="px-4 py-2 bg-red-500 text-white rounded-lg">Déconnexion</button>
+        </div>
+    </header>
+
+    <!-- Carte stats -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-2xl shadow-soft">
+            <p class="text-gray-500 text-sm">Utilisateurs</p>
+            <h2 id="usersCount" class="text-2xl font-bold">0</h2>
+        </div>
+    </div>
+
+    <!-- Table utilisateurs -->
+    <div class="bg-white rounded-2xl shadow-soft p-6">
+        <h2 class="text-lg font-semibold mb-4">Liste des utilisateurs</h2>
+        <table class="w-full text-sm">
+            <thead class="bg-gray-50 text-gray-600">
+            <tr>
+                <th class="px-4 py-2 text-left">Nom</th>
+                <th class="px-4 py-2 text-left">Email</th>
+                <th class="px-4 py-2 text-left">Rôle</th>
+                <th class="px-4 py-2 text-center">Actions</th>
+            </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL -->
+<div id="userModal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-soft p-6 relative">
+        <h2 id="modalTitle" class="text-xl font-semibold mb-4">Nouvel utilisateur</h2>
+        <form id="userForm" class="space-y-4">
+            <input type="hidden" id="userId" />
+            <input type="text" id="name" placeholder="Nom complet" class="w-full p-3 border rounded-lg" required />
+            <input type="email" id="email" placeholder="Email" class="w-full p-3 border rounded-lg" required />
+            <input type="password" id="password" placeholder="Mot de passe" class="w-full p-3 border rounded-lg" />
+            <select id="role" class="w-full p-3 border rounded-lg">
+                <option value="USER">Utilisateur</option>
+                <option value="ADMIN">Admin</option>
+            </select>
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="closeUserModal()" class="px-4 py-2 border rounded-lg">Annuler</button>
+                <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) { window.location.href = '/login'; }
+
+    async function loadUsers() {
+        const res = await fetch('/api/users', {
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        if (res.ok) {
+            const users = await res.json();
+            document.getElementById('usersCount').innerText = users.length;
+            const tbody = document.getElementById('usersTable');
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                tbody.innerHTML += `
+            <tr class="border-b hover:bg-gray-50">
+              <td class="px-4 py-2">${u.name}</td>
+              <td class="px-4 py-2">${u.email}</td>
+              <td class="px-4 py-2">${u.role}</td>
+              <td class="px-4 py-2 text-center space-x-2">
+                <button onclick="editUser(${u.id}, '${u.name}', '${u.email}', '${u.role}')" class="px-3 py-1 bg-yellow-400 text-white rounded-lg">✏️</button>
+                <button onclick="deleteUser(${u.id})" class="px-3 py-1 bg-red-500 text-white rounded-lg">🗑</button>
+              </td>
+            </tr>`;
+            });
+        } else if (res.status === 401) {
+            alert('Session expirée');
+            window.location.href = '/login';
+        }
+    }
+
+    // ---------- MODAL ----------
+    function openUserModal() {
+        document.getElementById('userForm').reset();
+        document.getElementById('userId').value = '';
+        document.getElementById('modalTitle').innerText = 'Nouvel utilisateur';
+        document.getElementById('userModal').classList.remove('hidden');
+    }
+
+    function closeUserModal() {
+        document.getElementById('userModal').classList.add('hidden');
+    }
+
+    function editUser(id, name, email, role) {
+        document.getElementById('userId').value = id;
+        document.getElementById('name').value = name;
+        document.getElementById('email').value = email;
+        document.getElementById('password').value = '';
+        document.getElementById('role').value = role;
+        document.getElementById('modalTitle').innerText = 'Modifier utilisateur';
+        document.getElementById('userModal').classList.remove('hidden');
+    }
+
+    // ---------- CRUD ----------
+    document.getElementById('userForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('userId').value;
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        const role = document.getElementById('role').value;
+
+        let method = id ? 'PUT' : 'POST';
+        let url = id ? `/api/users/${id}` : '/api/auth/signup';
+        let body = id
+            ? { id, name, email, role }
+            : { name, email, password, role };
+
+        const res = await fetch(url, {
+            method,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify(body)
+        });
+
+        if (res.ok) {
+            closeUserModal();
+            loadUsers();
+        } else {
+            alert('Erreur lors de la sauvegarde');
+        }
+    });
+
+    async function deleteUser(id) {
+        if (!confirm('Supprimer cet utilisateur ?')) return;
+        const res = await fetch(`/api/users/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (res.ok) {
+            loadUsers();
+        } else {
+            alert('Erreur lors de la suppression');
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = '/login';
+    }
+
+    loadUsers();
+</script>
+</body>
+</html>

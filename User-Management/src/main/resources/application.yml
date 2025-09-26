@@ -1,0 +1,30 @@
+
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/usermgmtdb
+    username: postgres
+    password: 1985
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+server:
+  port: 8080
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+
+
+
+app:
+  jwtSecret: "verySecretKeyChangeThisToLongRandomString_please_change"
+  jwtExpirationMs: 86400000
