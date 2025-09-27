@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::main})}">
+
+<main>
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold text-primary-900 mb-6"
+            th:text="${product.id == null} ? 'Nouveau Produit' : 'Modifier le Produit'"></h1>
+
+        <form th:action="${product.id == null} ? @{/products} : @{/products/{id}(id=${product.id})}"
+              th:object="${product}" method="post">
+
+            <div class="mb-4">
+                <label for="name" class="block text-neutral-700 text-sm font-bold mb-2">Nom du Produit</label>
+                <input type="text" id="name" th:field="*{name}" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-neutral-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500">
+            </div>
+
+            <div class="mb-4">
+                <label for="price" class="block text-neutral-700 text-sm font-bold mb-2">Prix</label>
+                <input type="number" id="price" step="0.01" th:field="*{price}" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-neutral-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500">
+            </div>
+
+            <div class="mb-6">
+                <label for="quantity" class="block text-neutral-700 text-sm font-bold mb-2">Quantité</label>
+                <input type="number" id="quantity" th:field="*{quantity}" required
+                       class="shadow appearance-none border rounded w-full py-2 px-3 text-neutral-700 leading-tight focus:outline-none focus:ring-2 focus:ring-primary-500">
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button type="submit"
+                        class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-300">
+                    Sauvegarder
+                </button>
+                <a th:href="@{/products}"
+                   class="inline-block align-baseline font-bold text-sm text-primary-600 hover:text-primary-800">
+                    Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+</html>

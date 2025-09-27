@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: layout(~{::main})}">
+
+<main>
+    <h1 class="text-5xl font-bold text-red-500 bg-yellow-200 p-8">
+        TEST TAILWIND
+    </h1>
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Tous les articles</h1>
+        <div class="flex items-center space-x-4">
+            <a sec:authorize="isAuthenticated()" href="/articles/new"
+               class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                Nouvel Article
+            </a>
+        </div>
+    </div>
+
+    <!-- Message si aucun article -->
+    <div th:if="${#lists.isEmpty(articles)}" class="text-center py-12">
+        <p class="text-gray-500 dark:text-gray-400 text-lg">Aucun article disponible.</p>
+        <a sec:authorize="isAuthenticated()" href="/articles/new" 
+           class="mt-4 inline-block bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
+            Créer le premier article
+        </a>
+    </div>
+
+    <!-- Liste des articles -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" th:if="${!#lists.isEmpty(articles)}">
+        <div th:each="article : ${articles}" class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
+            <div class="p-6">
+                <div class="flex justify-between items-start">
+                    <h2 class="text-2xl font-bold mb-2" th:text="${article.titre}">Titre de l'article</h2>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-4" th:text="${#strings.abbreviate(article.contenu, 100)}">Contenu de l'article...</p>
+                <div class="flex justify-between items-center">
+                    <a th:href="@{/articles/{id}(id=${article.id})}" class="text-indigo-500 hover:underline">Lire la suite</a>
+                    <div sec:authorize="isAuthenticated()" class="space-x-2">
+                        <a th:href="@{/articles/edit/{id}(id=${article.id})}" class="text-yellow-500 hover:underline">Modifier</a>
+                        <a th:href="@{/articles/delete/{id}(id=${article.id})}" onclick="return confirm('Êtes-vous sûr?')" class="text-red-500 hover:underline">Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</html>

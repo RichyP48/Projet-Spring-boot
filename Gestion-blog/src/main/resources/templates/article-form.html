@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::main})}">
+
+<main>
+    <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+        <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white"
+            th:text="${article.id == null} ? 'Créer un nouvel article' : 'Modifier l\'article'"></h1>
+
+        <form th:action="${article.id == null} ? @{/articles} : @{/articles/update/{id}(id=${article.id})}"
+              th:object="${article}" method="post" class="space-y-6">
+
+            <div>
+                <label for="titre" class="block text-sm font-medium mb-1">Titre</label>
+                <input type="text" id="titre" th:field="*{titre}" required minlength="5"
+                       class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div>
+                <label for="contenu" class="block text-sm font-medium mb-1">Contenu</label>
+                <textarea id="contenu" rows="10" th:field="*{contenu}" required minlength="20"
+                          class="w-full p-3 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+            </div>
+
+            <div class="flex items-center justify-end space-x-4">
+                <a href="/articles" class="text-gray-600 dark:text-gray-300 hover:underline">Annuler</a>
+                <button type="submit"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition duration-300">
+                    Sauvegarder
+                </button>
+            </div>
+        </form>
+    </div>
+</main>
+</html>

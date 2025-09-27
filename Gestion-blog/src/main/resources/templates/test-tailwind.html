@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::main})}">
+
+<main>
+    <div class="max-w-4xl mx-auto p-6">
+        <h1 class="text-4xl font-bold text-blue-600 mb-8">Test Tailwind CSS</h1>
+        
+        <!-- Test des couleurs de base -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-red-500 text-white p-4 rounded-lg">Rouge</div>
+            <div class="bg-green-500 text-white p-4 rounded-lg">Vert</div>
+            <div class="bg-blue-500 text-white p-4 rounded-lg">Bleu</div>
+        </div>
+        
+        <!-- Test des boutons -->
+        <div class="space-x-4 mb-8">
+            <button class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                Bouton Primary
+            </button>
+            <button class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                Bouton Secondary
+            </button>
+        </div>
+        
+        <!-- Test des cartes -->
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-semibold mb-4">Carte de test</h2>
+            <p class="text-gray-600">Si vous voyez cette carte avec des styles, Tailwind fonctionne correctement.</p>
+        </div>
+        
+        <!-- Test du mode sombre -->
+        <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Test mode sombre</h3>
+            <p class="text-gray-600 dark:text-gray-300">Ce texte change selon le mode sombre/clair.</p>
+        </div>
+        
+        <!-- Test CSS personnalisé -->
+        <div class="test-css p-4 mt-8 rounded">
+            Si ce bloc est rouge, le CSS personnalisé fonctionne
+        </div>
+    </div>
+</main>
+</html>

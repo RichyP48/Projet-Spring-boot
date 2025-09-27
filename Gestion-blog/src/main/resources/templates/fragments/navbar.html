@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="navbar" class="bg-white shadow mb-6">
+    <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+        <a href="/articles" class="text-2xl font-bold text-blue-600">Blog Moderne</a>
+        <div class="space-x-4">
+            <a href="/articles" class="text-gray-700 hover:text-blue-600">Articles</a>
+            <a href="/articles/new" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">+ Nouvel Article</a>
+            <a href="/swagger-ui/index.html" target="_blank"
+               class="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300">
+                API Docs
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: layout(~{::main})}">
+
+<main x-data="articleDetail()" th:with="articleId=${article.id}">
+    <div x-show="showNotification" x-transition
+         class="fixed top-20 right-5 bg-green-500 text-white py-2 px-4 rounded-lg shadow-lg"
+         x-text="notificationMessage">
+    </div>
+
+    <article class="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md">
+        <h1 class="text-5xl font-extrabold mb-4 text-gray-900 dark:text-white" th:text="${article.titre}"></h1>
+        <p class="text-gray-500 dark:text-gray-400 mb-8" th:text="'Publié le ' + ${#temporals.format(article.datePublication, 'dd MMMM yyyy à HH:mm')}"></p>
+        <div class="prose dark:prose-invert max-w-none" th:text="${article.contenu}"></div>
+    </article>
+
+    <section class="max-w-4xl mx-auto mt-10">
+        <h2 class="text-3xl font-bold mb-6 dark:text-white">Commentaires</h2>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-8">
+            <h3 class="text-xl font-semibold mb-4">Laisser un commentaire</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="auteur" class="block mb-2 text-sm font-medium">Votre nom</label>
+                    <input type="text" id="auteur" x-model="newComment.auteur" required
+                           class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label for="contenu" class="block mb-2 text-sm font-medium">Votre commentaire</label>
+                    <textarea id="contenu" rows="4" x-model="newComment.contenu" required
+                              class="w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500"></textarea>
+                </div>
+                <button @click.prevent="submitComment()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg">
+                    Envoyer
+                </button>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <template x-for="comment in comments" :key="comment.id">
+                <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+                    <p class="font-bold" x-text="comment.auteur"></p>
+                    <p class="text-gray-600 dark:text-gray-300" x-text="comment.contenu"></p>
+                    <p class="text-xs text-gray-400 mt-2" x-text="new Date(comment.dateCommentaire).toLocaleString('fr-FR')"></p>
+                </div>
+            </template>
+            <div x-show="comments.length === 0" class="text-center text-gray-500">
+                Aucun commentaire pour l'instant. Soyez le premier !
+            </div>
+        </div>
+    </section>
+
+    <script th:inline="javascript">
+        function articleDetail() {
+            return {
+                articleId: /*[[${article.id}]]*/ null,
+                comments: /*[[${article.commentaires}]]*/ [],
+                newComment: { auteur: '', contenu: '' },
+                showNotification: false,
+                notificationMessage: '',
+
+                submitComment() {
+                    if (!this.newComment.auteur || !this.newComment.contenu) {
+                        alert('Veuillez remplir tous les champs.');
+                        return;
+                    }
+
+                    fetch(`/api/articles/${this.articleId}/comments`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(this.newComment)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.comments.push(data);
+                            this.newComment.auteur = '';
+                            this.newComment.contenu = '';
+                            this.triggerNotification('Commentaire ajouté avec succès !');
+                        })
+                        .catch(error => console.error('Erreur:', error));
+                },
+
+                triggerNotification(message) {
+                    this.notificationMessage = message;
+                    this.showNotification = true;
+                    setTimeout(() => { this.showNotification = false }, 3000);
+                }
+            }
+        }
+    </script>
+</main>
+</html>

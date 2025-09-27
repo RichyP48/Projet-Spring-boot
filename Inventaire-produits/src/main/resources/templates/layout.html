@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de l'Inventaire</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link th:href="@{/main.css}" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: { primary: '#6366F1', accent: '#06B6D4' },
+                    boxShadow: { 'soft': '0 8px 20px rgba(0,0,0,0.08)' }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body class="bg-neutral-50 text-neutral-800">
+
+<div th:fragment="layout(content)" class="min-h-screen flex flex-col">
+    <nav class="bg-primary-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <a href="/products" class="text-white text-xl font-bold">InventoryApp</a>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/products"
+                           class="text-primary-100 hover:bg-primary-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            Produits
+                        </a>
+                        <a href="/swagger-ui/index.html" target="_blank"
+                           class="text-primary-100 hover:bg-primary-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            Swagger API
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow container mx-auto p-6">
+        <div th:replace="${content}"></div>
+    </main>
+
+    <footer class="bg-neutral-200 text-center p-4 mt-auto">
+        <p class="text-sm text-neutral-600">&copy; 2025 Inventory Management. Tous droits réservés.</p>
+    </footer>
+</div>
+
+</body>
+</html>
